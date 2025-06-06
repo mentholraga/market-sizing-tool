@@ -4,335 +4,594 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Market Sizing Calculator</title>
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body {
+        * {
             margin: 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
             background-color: #f9fafb;
+            color: #1f2937;
+            line-height: 1.6;
         }
-        .icon {
-            display: inline-block;
-            width: 1.5em;
-            height: 1.5em;
-            margin-right: 0.5em;
-            vertical-align: middle;
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
         }
-        .icon-sm {
-            width: 1em;
-            height: 1em;
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
         }
-        .icon-lg {
-            width: 2em;
-            height: 2em;
+        
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 10px;
         }
-        .icon-xl {
-            width: 3em;
-            height: 3em;
+        
+        .header p {
+            color: #6b7280;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .progress {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 40px;
+            gap: 20px;
+        }
+        
+        .progress-step {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .progress-step.active {
+            background-color: #2563eb;
+            color: white;
+        }
+        
+        .progress-step.inactive {
+            background-color: #e5e7eb;
+            color: #6b7280;
+        }
+        
+        .progress-line {
+            width: 60px;
+            height: 4px;
+            border-radius: 2px;
+        }
+        
+        .progress-line.active {
+            background-color: #2563eb;
+        }
+        
+        .progress-line.inactive {
+            background-color: #e5e7eb;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+        }
+        
+        .step {
+            display: none;
+        }
+        
+        .step.active {
+            display: block;
+        }
+        
+        .method-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .method-card {
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .method-card:hover {
+            border-color: #9ca3af;
+        }
+        
+        .method-card.selected {
+            border-color: #2563eb;
+            background-color: #eff6ff;
+        }
+        
+        .method-card h3 {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-group label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #374151;
+        }
+        
+        .input-group input,
+        .input-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .input-group input:focus,
+        .input-group textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .result-card {
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .result-card.blue {
+            background-color: #eff6ff;
+            color: #1e40af;
+        }
+        
+        .result-card.green {
+            background-color: #f0fdf4;
+            color: #166534;
+        }
+        
+        .result-card.purple {
+            background-color: #faf5ff;
+            color: #7c3aed;
+        }
+        
+        .result-card.orange {
+            background-color: #fff7ed;
+            color: #ea580c;
+        }
+        
+        .result-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .result-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: #2563eb;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #1d4ed8;
+        }
+        
+        .btn-secondary {
+            background-color: #6b7280;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #4b5563;
+        }
+        
+        .btn-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+        }
+        
+        .summary-section {
+            background-color: #f9fafb;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+        
+        .recommendations {
+            background-color: #eff6ff;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+        
+        .text-center {
+            text-align: center;
+        }
+        
+        .hidden {
+            display: none;
         }
     </style>
 </head>
 <body>
-    <div id="root"></div>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Market Sizing Calculator</h1>
+            <p>Estimate your market potential with data-driven analysis. Calculate total addressable market, potential revenue, and investment ratios to make informed business decisions.</p>
+        </div>
 
-    <script type="text/babel">
-        const { useState, useEffect } = React;
+        <div class="progress">
+            <div class="progress-step active" id="step1">1</div>
+            <div class="progress-line inactive" id="line1"></div>
+            <div class="progress-step inactive" id="step2">2</div>
+            <div class="progress-line inactive" id="line2"></div>
+            <div class="progress-step inactive" id="step3">3</div>
+        </div>
 
-        // Simple icon components (replacing Lucide)
-        const Calculator = ({ className }) => (
-            <div className={`${className} icon`} style={{background: '#2563eb', borderRadius: '4px', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8em'}}>
-                📊
+        <div class="card">
+            <!-- Step 1: Method Selection -->
+            <div class="step active" id="step-1">
+                <div class="text-center">
+                    <h2 style="font-size: 1.8rem; margin-bottom: 10px;">Choose Your Approach</h2>
+                    <p style="color: #6b7280;">Select the market sizing method that best fits your situation</p>
+                </div>
+
+                <div class="method-grid">
+                    <div class="method-card" onclick="selectMethod('top-down')">
+                        <h3>📈 Top-Down</h3>
+                        <p style="margin-bottom: 15px;">Start with the total market size and work down to your addressable portion.</p>
+                        <small style="color: #6b7280;">
+                            <strong>Best for:</strong> Quick estimates, established markets<br>
+                            <strong>Limitation:</strong> Can be overly optimistic
+                        </small>
+                    </div>
+
+                    <div class="method-card" onclick="selectMethod('bottom-up')">
+                        <h3>📊 Bottom-Up</h3>
+                        <p style="margin-bottom: 15px;">Build up from actual market research and customer validation data.</p>
+                        <small style="color: #6b7280;">
+                            <strong>Best for:</strong> Accurate forecasting, new products<br>
+                            <strong>Requires:</strong> Market research data
+                        </small>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <button class="btn btn-primary hidden" id="continue-btn" onclick="goToStep(2)">
+                        Continue with Selected Approach
+                    </button>
+                </div>
             </div>
-        );
 
-        const TrendingUp = ({ className }) => (
-            <div className={`${className} icon`} style={{background: '#dc2626', borderRadius: '4px', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8em'}}>
-                📈
+            <!-- Step 2: Data Input -->
+            <div class="step" id="step-2">
+                <div class="text-center">
+                    <h2 style="font-size: 1.8rem; margin-bottom: 10px;">Market Research Data</h2>
+                    <p style="color: #6b7280;">Enter your market research findings</p>
+                </div>
+
+                <div class="input-grid">
+                    <div>
+                        <div class="input-group">
+                            <label>Target Market Description</label>
+                            <textarea id="targetMarket" rows="3" placeholder="e.g., Independent bars and restaurants in the US"></textarea>
+                        </div>
+
+                        <div class="input-group">
+                            <label>Total Target Businesses</label>
+                            <input type="number" id="totalBusinesses" placeholder="20000">
+                        </div>
+
+                        <div class="input-group">
+                            <label>Average Price per Sale ($)</label>
+                            <input type="number" id="averagePrice" placeholder="30000">
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="input-group">
+                            <label>Survey Sample Size</label>
+                            <input type="number" id="surveySize" placeholder="150">
+                        </div>
+
+                        <div class="input-group">
+                            <label>Interested Responses</label>
+                            <input type="number" id="interestedResponses" placeholder="55">
+                        </div>
+
+                        <div class="input-group">
+                            <label>Conservative Adjustment</label>
+                            <input type="number" id="conservativeAdjustment" placeholder="22">
+                        </div>
+
+                        <div class="input-group">
+                            <label>Development Cost ($)</label>
+                            <input type="number" id="developmentCost" placeholder="10000000">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="btn-nav">
+                    <button class="btn btn-secondary" onclick="goToStep(1)">Back</button>
+                    <button class="btn btn-primary" onclick="calculateResults()">Calculate Results</button>
+                </div>
             </div>
-        );
 
-        const Users = ({ className }) => (
-            <div className={`${className} icon`} style={{background: '#059669', borderRadius: '4px', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8em'}}>
-                👥
+            <!-- Step 3: Results -->
+            <div class="step" id="step-3">
+                <div class="text-center">
+                    <h2 style="font-size: 1.8rem; margin-bottom: 10px;">Market Sizing Results</h2>
+                    <p style="color: #6b7280;">Based on your analysis</p>
+                </div>
+
+                <div class="results-grid">
+                    <div class="result-card blue">
+                        <h3>👥 Interest Rate</h3>
+                        <div class="result-value" id="interestRate">0%</div>
+                        <div class="result-label">Of surveyed businesses</div>
+                    </div>
+
+                    <div class="result-card green">
+                        <h3>🎯 Potential Customers</h3>
+                        <div class="result-value" id="potentialCustomers">0</div>
+                        <div class="result-label">Interested businesses</div>
+                    </div>
+
+                    <div class="result-card purple">
+                        <h3>💰 Total Revenue</h3>
+                        <div class="result-value" id="totalRevenue">$0</div>
+                        <div class="result-label">Potential annual revenue</div>
+                    </div>
+
+                    <div class="result-card orange">
+                        <h3>📈 Investment Ratio</h3>
+                        <div class="result-value" id="investmentRatio">0%</div>
+                        <div class="result-label">Of potential revenue</div>
+                    </div>
+                </div>
+
+                <div class="summary-section">
+                    <h3>📄 Analysis Summary</h3>
+                    <div id="summary-content"></div>
+                </div>
+
+                <div class="recommendations">
+                    <h3>💡 Recommendations</h3>
+                    <div id="recommendations-content"></div>
+                </div>
+
+                <div class="btn-nav">
+                    <button class="btn btn-secondary" onclick="goToStep(2)">Back to Edit</button>
+                    <button class="btn btn-primary" onclick="goToStep(1)">Start New Analysis</button>
+                </div>
             </div>
-        );
+        </div>
+    </div>
 
-        const DollarSign = ({ className }) => (
-            <div className={`${className} icon`} style={{background: '#7c3aed', borderRadius: '4px', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8em'}}>
-                💰
-            </div>
-        );
+    <script>
+        let selectedMethod = '';
+        let results = {};
 
-        const BarChart3 = ({ className }) => (
-            <div className={`${className} icon`} style={{background: '#059669', borderRadius: '4px', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8em'}}>
-                📊
-            </div>
-        );
-
-        const FileText = ({ className }) => (
-            <div className={`${className} icon`} style={{background: '#6b7280', borderRadius: '4px', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8em'}}>
-                📄
-            </div>
-        );
-
-        const MarketSizingTool = () => {
-            const [currentStep, setCurrentStep] = useState(1);
-            const [method, setMethod] = useState('');
-            const [marketData, setMarketData] = useState({
-                targetMarket: '',
-                totalBusinesses: '',
-                averagePrice: '',
-                surveySize: '',
-                interestedResponses: '',
-                conservativeAdjustment: '',
-                developmentCost: ''
+        function selectMethod(method) {
+            selectedMethod = method;
+            
+            // Remove selected class from all cards
+            document.querySelectorAll('.method-card').forEach(card => {
+                card.classList.remove('selected');
             });
-            const [results, setResults] = useState({
-                potentialCustomers: 0,
-                totalRevenue: 0,
-                investmentRatio: 0,
-                interestRate: 0
+            
+            // Add selected class to clicked card
+            event.target.closest('.method-card').classList.add('selected');
+            
+            // Show continue button
+            document.getElementById('continue-btn').classList.remove('hidden');
+            document.getElementById('continue-btn').textContent = `Continue with ${method === 'top-down' ? 'Top-Down' : 'Bottom-Up'} Approach`;
+        }
+
+        function goToStep(stepNumber) {
+            // Hide all steps
+            document.querySelectorAll('.step').forEach(step => {
+                step.classList.remove('active');
             });
+            
+            // Show target step
+            document.getElementById(`step-${stepNumber}`).classList.add('active');
+            
+            // Update progress indicators
+            updateProgress(stepNumber);
+        }
 
-            const updateResults = () => {
-                const totalBiz = parseInt(marketData.totalBusinesses) || 0;
-                const surveySize = parseInt(marketData.surveySize) || 0;
-                const interested = parseInt(marketData.interestedResponses) || 0;
-                const conservative = parseInt(marketData.conservativeAdjustment) || interested;
-                const price = parseFloat(marketData.averagePrice) || 0;
-                const devCost = parseFloat(marketData.developmentCost) || 0;
-
-                if (surveySize > 0) {
-                    const interestRate = (conservative / surveySize) * 100;
-                    const potentialCustomers = Math.round((totalBiz * conservative) / surveySize);
-                    const totalRevenue = potentialCustomers * price;
-                    const investmentRatio = devCost > 0 ? (devCost / totalRevenue) * 100 : 0;
-
-                    setResults({
-                        potentialCustomers,
-                        totalRevenue,
-                        investmentRatio,
-                        interestRate
-                    });
+        function updateProgress(currentStep) {
+            for (let i = 1; i <= 3; i++) {
+                const stepEl = document.getElementById(`step${i}`);
+                const lineEl = document.getElementById(`line${i}`);
+                
+                if (i <= currentStep) {
+                    stepEl.classList.remove('inactive');
+                    stepEl.classList.add('active');
+                } else {
+                    stepEl.classList.remove('active');
+                    stepEl.classList.add('inactive');
                 }
-            };
+                
+                if (lineEl) {
+                    if (i < currentStep) {
+                        lineEl.classList.remove('inactive');
+                        lineEl.classList.add('active');
+                    } else {
+                        lineEl.classList.remove('active');
+                        lineEl.classList.add('inactive');
+                    }
+                }
+            }
+        }
 
-            useEffect(() => {
-                updateResults();
-            }, [marketData]);
+        function calculateResults() {
+            // Get input values
+            const totalBusinesses = parseInt(document.getElementById('totalBusinesses').value) || 0;
+            const surveySize = parseInt(document.getElementById('surveySize').value) || 0;
+            const interestedResponses = parseInt(document.getElementById('interestedResponses').value) || 0;
+            const conservativeAdjustment = parseInt(document.getElementById('conservativeAdjustment').value) || interestedResponses;
+            const averagePrice = parseFloat(document.getElementById('averagePrice').value) || 0;
+            const developmentCost = parseFloat(document.getElementById('developmentCost').value) || 0;
+            const targetMarket = document.getElementById('targetMarket').value;
 
-            const handleInputChange = (field, value) => {
-                setMarketData(prev => ({
-                    ...prev,
-                    [field]: value
-                }));
-            };
+            // Calculate results
+            if (surveySize > 0) {
+                const interestRate = (conservativeAdjustment / surveySize) * 100;
+                const potentialCustomers = Math.round((totalBusinesses * conservativeAdjustment) / surveySize);
+                const totalRevenue = potentialCustomers * averagePrice;
+                const investmentRatio = developmentCost > 0 ? (developmentCost / totalRevenue) * 100 : 0;
 
-            const formatCurrency = (amount) => {
-                return new Intl.NumberFormat('en-US', {
-                    style: 'currency',
-                    currency: 'USD',
-                    minimumFractionDigits: 0,
-                    maximumFractionDigits: 0
-                }).format(amount);
-            };
+                results = {
+                    interestRate,
+                    potentialCustomers,
+                    totalRevenue,
+                    investmentRatio,
+                    targetMarket,
+                    totalBusinesses,
+                    averagePrice,
+                    developmentCost
+                };
 
-            const formatNumber = (num) => {
-                return new Intl.NumberFormat('en-US').format(num);
-            };
+                // Update display
+                document.getElementById('interestRate').textContent = `${interestRate.toFixed(1)}%`;
+                document.getElementById('potentialCustomers').textContent = formatNumber(potentialCustomers);
+                document.getElementById('totalRevenue').textContent = formatCurrency(totalRevenue);
+                document.getElementById('investmentRatio').textContent = `${investmentRatio.toFixed(1)}%`;
 
-            const MethodSelection = () => (
-                <div className="space-y-6">
-                    <div className="text-center">
-                        <h2 className="text-2xl font-bold text-gray-900 mb-2">Choose Your Approach</h2>
-                        <p className="text-gray-600">Select the market sizing method that best fits your situation</p>
+                // Update summary
+                updateSummary();
+                updateRecommendations();
+
+                // Go to results step
+                goToStep(3);
+            }
+        }
+
+        function updateSummary() {
+            const content = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                    <div>
+                        <h4>Market Overview</h4>
+                        <ul style="margin: 10px 0; padding-left: 20px; font-size: 0.9rem; color: #6b7280;">
+                            <li>Target Market: ${results.targetMarket || 'Not specified'}</li>
+                            <li>Total Addressable Market: ${formatNumber(results.totalBusinesses)} businesses</li>
+                            <li>Average Deal Size: ${formatCurrency(results.averagePrice)}</li>
+                        </ul>
                     </div>
-
-                    <div className="grid md:grid-cols-2 gap-6">
-                        <div 
-                            className={`p-6 border-2 rounded-lg cursor-pointer transition-all ${
-                                method === 'top-down' ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'
-                            }`}
-                            onClick={() => setMethod('top-down')}
-                        >
-                            <div className="flex items-center mb-4">
-                                <TrendingUp className="h-8 w-8 text-blue-600 mr-3" />
-                                <h3 className="text-xl font-semibold">Top-Down</h3>
-                            </div>
-                            <p className="text-gray-600 mb-4">Start with the total market size and work down to your addressable portion.</p>
-                            <div className="text-sm text-gray-500">
-                                <strong>Best for:</strong> Quick estimates, established markets
-                                <br />
-                                <strong>Limitation:</strong> Can be overly optimistic
-                            </div>
-                        </div>
-
-                        <div 
-                            className={`p-6 border-2 rounded-lg cursor-pointer transition-all ${
-                                method === 'bottom-up' ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'
-                            }`}
-                            onClick={() => setMethod('bottom-up')}
-                        >
-                            <div className="flex items-center mb-4">
-                                <BarChart3 className="h-8 w-8 text-green-600 mr-3" />
-                                <h3 className="text-xl font-semibold">Bottom-Up</h3>
-                            </div>
-                            <p className="text-gray-600 mb-4">Build up from actual market research and customer validation data.</p>
-                            <div className="text-sm text-gray-500">
-                                <strong>Best for:</strong> Accurate forecasting, new products
-                                <br />
-                                <strong>Requires:</strong> Market research data
-                            </div>
-                        </div>
-                    </div>
-
-                    {method && (
-                        <div className="text-center">
-                            <button 
-                                onClick={() => setCurrentStep(2)}
-                                className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors"
-                            >
-                                Continue with {method === 'top-down' ? 'Top-Down' : 'Bottom-Up'} Approach
-                            </button>
-                        </div>
-                    )}
-                </div>
-            );
-
-            const DataInput = () => (
-                <div className="space-y-6">
-                    <div className="text-center">
-                        <h2 className="text-2xl font-bold text-gray-900 mb-2">Market Research Data</h2>
-                        <p className="text-gray-600">Enter your market research findings</p>
-                    </div>
-
-                    <div className="grid md:grid-cols-2 gap-6">
-                        <div className="space-y-4">
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Target Market Description
-                                </label>
-                                <textarea
-                                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                    rows="3"
-                                    placeholder="e.g., Independent bars and restaurants in the US"
-                                    value={marketData.targetMarket}
-                                    onChange={(e) => handleInputChange('targetMarket', e.target.value)}
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Total Target Businesses
-                                </label>
-                                <input
-                                    type="number"
-                                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                    placeholder="20000"
-                                    value={marketData.totalBusinesses}
-                                    onChange={(e) => handleInputChange('totalBusinesses', e.target.value)}
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Average Price per Sale ($)
-                                </label>
-                                <input
-                                    type="number"
-                                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                    placeholder="30000"
-                                    value={marketData.averagePrice}
-                                    onChange={(e) => handleInputChange('averagePrice', e.target.value)}
-                                />
-                            </div>
-                        </div>
-
-                        <div className="space-y-4">
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Survey Sample Size
-                                </label>
-                                <input
-                                    type="number"
-                                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                    placeholder="150"
-                                    value={marketData.surveySize}
-                                    onChange={(e) => handleInputChange('surveySize', e.target.value)}
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Interested Responses
-                                </label>
-                                <input
-                                    type="number"
-                                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                    placeholder="55"
-                                    value={marketData.interestedResponses}
-                                    onChange={(e) => handleInputChange('interestedResponses', e.target.value)}
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Conservative Adjustment
-                                </label>
-                                <input
-                                    type="number"
-                                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                    placeholder="22"
-                                    value={marketData.conservativeAdjustment}
-                                    onChange={(e) => handleInputChange('conservativeAdjustment', e.target.value)}
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Development Cost ($)
-                                </label>
-                                <input
-                                    type="number"
-                                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                    placeholder="10000000"
-                                    value={marketData.developmentCost}
-                                    onChange={(e) => handleInputChange('developmentCost', e.target.value)}
-                                />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="flex justify-between">
-                        <button 
-                            onClick={() => setCurrentStep(1)}
-                            className="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition-colors"
-                        >
-                            Back
-                        </button>
-                        <button 
-                            onClick={() => setCurrentStep(3)}
-                            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-                        >
-                            Calculate Results
-                        </button>
+                    <div>
+                        <h4>Investment Analysis</h4>
+                        <ul style="margin: 10px 0; padding-left: 20px; font-size: 0.9rem; color: #6b7280;">
+                            <li>Development Investment: ${formatCurrency(results.developmentCost)}</li>
+                            <li>Risk Assessment: ${results.investmentRatio < 10 ? 'Low Risk' : results.investmentRatio < 25 ? 'Medium Risk' : 'High Risk'}</li>
+                            <li>Market Validation: ${results.interestRate > 20 ? 'Strong' : results.interestRate > 10 ? 'Moderate' : 'Weak'}</li>
+                        </ul>
                     </div>
                 </div>
-            );
+            `;
+            document.getElementById('summary-content').innerHTML = content;
+        }
 
-            const ResultsView = () => (
-                <div className="space-y-6">
-                    <div className="text-center">
-                        <h2 className="text-2xl font-bold text-gray-900 mb-2">Market Sizing Results</h2>
-                        <p className="text-gray-600">Based on your {method} analysis</p>
-                    </div>
+        function updateRecommendations() {
+            let recommendations = [];
 
-                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-                        <div className="bg-blue-50 p-6 rounded-lg">
-                            <div className="flex items-center mb-2">
-                                <Users className=
+            if (results.investmentRatio < 10) {
+                recommendations.push(`✅ <strong>Low-risk investment</strong> - Development cost is only ${results.investmentRatio.toFixed(1)}% of potential revenue`);
+            }
+
+            if (results.interestRate > 15) {
+                recommendations.push(`✅ <strong>Strong market interest</strong> - ${results.interestRate.toFixed(1)}% interest rate indicates good market fit`);
+            }
+
+            if (results.potentialCustomers > 1000) {
+                recommendations.push(`✅ <strong>Large addressable market</strong> - ${formatNumber(results.potentialCustomers)} potential customers`);
+            }
+
+            if (results.investmentRatio > 25) {
+                recommendations.push(`⚠️ <strong>Consider reducing development costs</strong> - Investment ratio of ${results.investmentRatio.toFixed(1)}% is relatively high`);
+            }
+
+            if (results.interestRate < 10) {
+                recommendations.push(`⚠️ <strong>Low market interest</strong> - Consider improving product-market fit before investing`);
+            }
+
+            if (recommendations.length === 0) {
+                recommendations.push('📊 Continue gathering market data to improve analysis accuracy');
+            }
+
+            document.getElementById('recommendations-content').innerHTML = recommendations.map(rec => `<p style="margin: 8px 0; font-size: 0.9rem;">${rec}</p>`).join('');
+        }
+
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(amount);
+        }
+
+        function formatNumber(num) {
+            return new Intl.NumberFormat('en-US').format(num);
+        }
+
+        // Initialize
+        updateProgress(1);
+    </script>
+</body>
+</html>
