@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Market Sizing Calculator</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.js"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
@@ -17,6 +16,25 @@
             -moz-osx-font-smoothing: grayscale;
             background-color: #f9fafb;
         }
+        .icon {
+            display: inline-block;
+            width: 1.5em;
+            height: 1.5em;
+            margin-right: 0.5em;
+            vertical-align: middle;
+        }
+        .icon-sm {
+            width: 1em;
+            height: 1em;
+        }
+        .icon-lg {
+            width: 2em;
+            height: 2em;
+        }
+        .icon-xl {
+            width: 3em;
+            height: 3em;
+        }
     </style>
 </head>
 <body>
@@ -24,7 +42,43 @@
 
     <script type="text/babel">
         const { useState, useEffect } = React;
-        const { Calculator, TrendingUp, Users, DollarSign, BarChart3, FileText } = lucide;
+
+        // Simple icon components (replacing Lucide)
+        const Calculator = ({ className }) => (
+            <div className={`${className} icon`} style={{background: '#2563eb', borderRadius: '4px', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8em'}}>
+                📊
+            </div>
+        );
+
+        const TrendingUp = ({ className }) => (
+            <div className={`${className} icon`} style={{background: '#dc2626', borderRadius: '4px', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8em'}}>
+                📈
+            </div>
+        );
+
+        const Users = ({ className }) => (
+            <div className={`${className} icon`} style={{background: '#059669', borderRadius: '4px', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8em'}}>
+                👥
+            </div>
+        );
+
+        const DollarSign = ({ className }) => (
+            <div className={`${className} icon`} style={{background: '#7c3aed', borderRadius: '4px', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8em'}}>
+                💰
+            </div>
+        );
+
+        const BarChart3 = ({ className }) => (
+            <div className={`${className} icon`} style={{background: '#059669', borderRadius: '4px', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8em'}}>
+                📊
+            </div>
+        );
+
+        const FileText = ({ className }) => (
+            <div className={`${className} icon`} style={{background: '#6b7280', borderRadius: '4px', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8em'}}>
+                📄
+            </div>
+        );
 
         const MarketSizingTool = () => {
             const [currentStep, setCurrentStep] = useState(1);
@@ -93,280 +147,192 @@
             };
 
             const MethodSelection = () => (
-                React.createElement('div', { className: 'space-y-6' },
-                    React.createElement('div', { className: 'text-center' },
-                        React.createElement('h2', { className: 'text-2xl font-bold text-gray-900 mb-2' }, 'Choose Your Approach'),
-                        React.createElement('p', { className: 'text-gray-600' }, 'Select the market sizing method that best fits your situation')
-                    ),
-                    React.createElement('div', { className: 'grid md:grid-cols-2 gap-6' },
-                        React.createElement('div', {
-                            className: `p-6 border-2 rounded-lg cursor-pointer transition-all ${
+                <div className="space-y-6">
+                    <div className="text-center">
+                        <h2 className="text-2xl font-bold text-gray-900 mb-2">Choose Your Approach</h2>
+                        <p className="text-gray-600">Select the market sizing method that best fits your situation</p>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-6">
+                        <div 
+                            className={`p-6 border-2 rounded-lg cursor-pointer transition-all ${
                                 method === 'top-down' ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'
-                            }`,
-                            onClick: () => setMethod('top-down')
-                        },
-                            React.createElement('div', { className: 'flex items-center mb-4' },
-                                React.createElement(TrendingUp, { className: 'h-8 w-8 text-blue-600 mr-3' }),
-                                React.createElement('h3', { className: 'text-xl font-semibold' }, 'Top-Down')
-                            ),
-                            React.createElement('p', { className: 'text-gray-600 mb-4' }, 'Start with the total market size and work down to your addressable portion.'),
-                            React.createElement('div', { className: 'text-sm text-gray-500' },
-                                React.createElement('strong', null, 'Best for:'), ' Quick estimates, established markets',
-                                React.createElement('br'),
-                                React.createElement('strong', null, 'Limitation:'), ' Can be overly optimistic'
-                            )
-                        ),
-                        React.createElement('div', {
-                            className: `p-6 border-2 rounded-lg cursor-pointer transition-all ${
+                            }`}
+                            onClick={() => setMethod('top-down')}
+                        >
+                            <div className="flex items-center mb-4">
+                                <TrendingUp className="h-8 w-8 text-blue-600 mr-3" />
+                                <h3 className="text-xl font-semibold">Top-Down</h3>
+                            </div>
+                            <p className="text-gray-600 mb-4">Start with the total market size and work down to your addressable portion.</p>
+                            <div className="text-sm text-gray-500">
+                                <strong>Best for:</strong> Quick estimates, established markets
+                                <br />
+                                <strong>Limitation:</strong> Can be overly optimistic
+                            </div>
+                        </div>
+
+                        <div 
+                            className={`p-6 border-2 rounded-lg cursor-pointer transition-all ${
                                 method === 'bottom-up' ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'
-                            }`,
-                            onClick: () => setMethod('bottom-up')
-                        },
-                            React.createElement('div', { className: 'flex items-center mb-4' },
-                                React.createElement(BarChart3, { className: 'h-8 w-8 text-green-600 mr-3' }),
-                                React.createElement('h3', { className: 'text-xl font-semibold' }, 'Bottom-Up')
-                            ),
-                            React.createElement('p', { className: 'text-gray-600 mb-4' }, 'Build up from actual market research and customer validation data.'),
-                            React.createElement('div', { className: 'text-sm text-gray-500' },
-                                React.createElement('strong', null, 'Best for:'), ' Accurate forecasting, new products',
-                                React.createElement('br'),
-                                React.createElement('strong', null, 'Requires:'), ' Market research data'
-                            )
-                        )
-                    ),
-                    method && React.createElement('div', { className: 'text-center' },
-                        React.createElement('button', {
-                            onClick: () => setCurrentStep(2),
-                            className: 'bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors'
-                        }, `Continue with ${method === 'top-down' ? 'Top-Down' : 'Bottom-Up'} Approach`)
-                    )
-                )
+                            }`}
+                            onClick={() => setMethod('bottom-up')}
+                        >
+                            <div className="flex items-center mb-4">
+                                <BarChart3 className="h-8 w-8 text-green-600 mr-3" />
+                                <h3 className="text-xl font-semibold">Bottom-Up</h3>
+                            </div>
+                            <p className="text-gray-600 mb-4">Build up from actual market research and customer validation data.</p>
+                            <div className="text-sm text-gray-500">
+                                <strong>Best for:</strong> Accurate forecasting, new products
+                                <br />
+                                <strong>Requires:</strong> Market research data
+                            </div>
+                        </div>
+                    </div>
+
+                    {method && (
+                        <div className="text-center">
+                            <button 
+                                onClick={() => setCurrentStep(2)}
+                                className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+                            >
+                                Continue with {method === 'top-down' ? 'Top-Down' : 'Bottom-Up'} Approach
+                            </button>
+                        </div>
+                    )}
+                </div>
             );
 
             const DataInput = () => (
-                React.createElement('div', { className: 'space-y-6' },
-                    React.createElement('div', { className: 'text-center' },
-                        React.createElement('h2', { className: 'text-2xl font-bold text-gray-900 mb-2' }, 'Market Research Data'),
-                        React.createElement('p', { className: 'text-gray-600' }, 'Enter your market research findings')
-                    ),
-                    React.createElement('div', { className: 'grid md:grid-cols-2 gap-6' },
-                        React.createElement('div', { className: 'space-y-4' },
-                            React.createElement('div', null,
-                                React.createElement('label', { className: 'block text-sm font-medium text-gray-700 mb-2' }, 'Target Market Description'),
-                                React.createElement('textarea', {
-                                    className: 'w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent',
-                                    rows: '3',
-                                    placeholder: 'e.g., Independent bars and restaurants in the US',
-                                    value: marketData.targetMarket,
-                                    onChange: (e) => handleInputChange('targetMarket', e.target.value)
-                                })
-                            ),
-                            React.createElement('div', null,
-                                React.createElement('label', { className: 'block text-sm font-medium text-gray-700 mb-2' }, 'Total Target Businesses'),
-                                React.createElement('input', {
-                                    type: 'number',
-                                    className: 'w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent',
-                                    placeholder: '20000',
-                                    value: marketData.totalBusinesses,
-                                    onChange: (e) => handleInputChange('totalBusinesses', e.target.value)
-                                })
-                            ),
-                            React.createElement('div', null,
-                                React.createElement('label', { className: 'block text-sm font-medium text-gray-700 mb-2' }, 'Average Price per Sale ($)'),
-                                React.createElement('input', {
-                                    type: 'number',
-                                    className: 'w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent',
-                                    placeholder: '30000',
-                                    value: marketData.averagePrice,
-                                    onChange: (e) => handleInputChange('averagePrice', e.target.value)
-                                })
-                            )
-                        ),
-                        React.createElement('div', { className: 'space-y-4' },
-                            React.createElement('div', null,
-                                React.createElement('label', { className: 'block text-sm font-medium text-gray-700 mb-2' }, 'Survey Sample Size'),
-                                React.createElement('input', {
-                                    type: 'number',
-                                    className: 'w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent',
-                                    placeholder: '150',
-                                    value: marketData.surveySize,
-                                    onChange: (e) => handleInputChange('surveySize', e.target.value)
-                                })
-                            ),
-                            React.createElement('div', null,
-                                React.createElement('label', { className: 'block text-sm font-medium text-gray-700 mb-2' }, 'Interested Responses'),
-                                React.createElement('input', {
-                                    type: 'number',
-                                    className: 'w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent',
-                                    placeholder: '55',
-                                    value: marketData.interestedResponses,
-                                    onChange: (e) => handleInputChange('interestedResponses', e.target.value)
-                                })
-                            ),
-                            React.createElement('div', null,
-                                React.createElement('label', { className: 'block text-sm font-medium text-gray-700 mb-2' }, 'Conservative Adjustment'),
-                                React.createElement('input', {
-                                    type: 'number',
-                                    className: 'w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent',
-                                    placeholder: '22',
-                                    value: marketData.conservativeAdjustment,
-                                    onChange: (e) => handleInputChange('conservativeAdjustment', e.target.value)
-                                })
-                            ),
-                            React.createElement('div', null,
-                                React.createElement('label', { className: 'block text-sm font-medium text-gray-700 mb-2' }, 'Development Cost ($)'),
-                                React.createElement('input', {
-                                    type: 'number',
-                                    className: 'w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent',
-                                    placeholder: '10000000',
-                                    value: marketData.developmentCost,
-                                    onChange: (e) => handleInputChange('developmentCost', e.target.value)
-                                })
-                            )
-                        )
-                    ),
-                    React.createElement('div', { className: 'flex justify-between' },
-                        React.createElement('button', {
-                            onClick: () => setCurrentStep(1),
-                            className: 'bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition-colors'
-                        }, 'Back'),
-                        React.createElement('button', {
-                            onClick: () => setCurrentStep(3),
-                            className: 'bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors'
-                        }, 'Calculate Results')
-                    )
-                )
+                <div className="space-y-6">
+                    <div className="text-center">
+                        <h2 className="text-2xl font-bold text-gray-900 mb-2">Market Research Data</h2>
+                        <p className="text-gray-600">Enter your market research findings</p>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-6">
+                        <div className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Target Market Description
+                                </label>
+                                <textarea
+                                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    rows="3"
+                                    placeholder="e.g., Independent bars and restaurants in the US"
+                                    value={marketData.targetMarket}
+                                    onChange={(e) => handleInputChange('targetMarket', e.target.value)}
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Total Target Businesses
+                                </label>
+                                <input
+                                    type="number"
+                                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    placeholder="20000"
+                                    value={marketData.totalBusinesses}
+                                    onChange={(e) => handleInputChange('totalBusinesses', e.target.value)}
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Average Price per Sale ($)
+                                </label>
+                                <input
+                                    type="number"
+                                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    placeholder="30000"
+                                    value={marketData.averagePrice}
+                                    onChange={(e) => handleInputChange('averagePrice', e.target.value)}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Survey Sample Size
+                                </label>
+                                <input
+                                    type="number"
+                                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    placeholder="150"
+                                    value={marketData.surveySize}
+                                    onChange={(e) => handleInputChange('surveySize', e.target.value)}
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Interested Responses
+                                </label>
+                                <input
+                                    type="number"
+                                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    placeholder="55"
+                                    value={marketData.interestedResponses}
+                                    onChange={(e) => handleInputChange('interestedResponses', e.target.value)}
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Conservative Adjustment
+                                </label>
+                                <input
+                                    type="number"
+                                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    placeholder="22"
+                                    value={marketData.conservativeAdjustment}
+                                    onChange={(e) => handleInputChange('conservativeAdjustment', e.target.value)}
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Development Cost ($)
+                                </label>
+                                <input
+                                    type="number"
+                                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    placeholder="10000000"
+                                    value={marketData.developmentCost}
+                                    onChange={(e) => handleInputChange('developmentCost', e.target.value)}
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="flex justify-between">
+                        <button 
+                            onClick={() => setCurrentStep(1)}
+                            className="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition-colors"
+                        >
+                            Back
+                        </button>
+                        <button 
+                            onClick={() => setCurrentStep(3)}
+                            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                        >
+                            Calculate Results
+                        </button>
+                    </div>
+                </div>
             );
 
             const ResultsView = () => (
-                React.createElement('div', { className: 'space-y-6' },
-                    React.createElement('div', { className: 'text-center' },
-                        React.createElement('h2', { className: 'text-2xl font-bold text-gray-900 mb-2' }, 'Market Sizing Results'),
-                        React.createElement('p', { className: 'text-gray-600' }, `Based on your ${method} analysis`)
-                    ),
-                    React.createElement('div', { className: 'grid md:grid-cols-2 lg:grid-cols-4 gap-4' },
-                        React.createElement('div', { className: 'bg-blue-50 p-6 rounded-lg' },
-                            React.createElement('div', { className: 'flex items-center mb-2' },
-                                React.createElement(Users, { className: 'h-6 w-6 text-blue-600 mr-2' }),
-                                React.createElement('h3', { className: 'font-semibold text-gray-900' }, 'Interest Rate')
-                            ),
-                            React.createElement('p', { className: 'text-2xl font-bold text-blue-600' }, `${results.interestRate.toFixed(1)}%`),
-                            React.createElement('p', { className: 'text-sm text-gray-600' }, 'Of surveyed businesses')
-                        ),
-                        React.createElement('div', { className: 'bg-green-50 p-6 rounded-lg' },
-                            React.createElement('div', { className: 'flex items-center mb-2' },
-                                React.createElement(Users, { className: 'h-6 w-6 text-green-600 mr-2' }),
-                                React.createElement('h3', { className: 'font-semibold text-gray-900' }, 'Potential Customers')
-                            ),
-                            React.createElement('p', { className: 'text-2xl font-bold text-green-600' }, formatNumber(results.potentialCustomers)),
-                            React.createElement('p', { className: 'text-sm text-gray-600' }, 'Interested businesses')
-                        ),
-                        React.createElement('div', { className: 'bg-purple-50 p-6 rounded-lg' },
-                            React.createElement('div', { className: 'flex items-center mb-2' },
-                                React.createElement(DollarSign, { className: 'h-6 w-6 text-purple-600 mr-2' }),
-                                React.createElement('h3', { className: 'font-semibold text-gray-900' }, 'Total Revenue')
-                            ),
-                            React.createElement('p', { className: 'text-2xl font-bold text-purple-600' }, formatCurrency(results.totalRevenue)),
-                            React.createElement('p', { className: 'text-sm text-gray-600' }, 'Potential annual revenue')
-                        ),
-                        React.createElement('div', { className: 'bg-orange-50 p-6 rounded-lg' },
-                            React.createElement('div', { className: 'flex items-center mb-2' },
-                                React.createElement(TrendingUp, { className: 'h-6 w-6 text-orange-600 mr-2' }),
-                                React.createElement('h3', { className: 'font-semibold text-gray-900' }, 'Investment Ratio')
-                            ),
-                            React.createElement('p', { className: 'text-2xl font-bold text-orange-600' }, `${results.investmentRatio.toFixed(1)}%`),
-                            React.createElement('p', { className: 'text-sm text-gray-600' }, 'Of potential revenue')
-                        )
-                    ),
-                    React.createElement('div', { className: 'bg-gray-50 p-6 rounded-lg' },
-                        React.createElement('h3', { className: 'text-lg font-semibold mb-4 flex items-center' },
-                            React.createElement(FileText, { className: 'h-5 w-5 mr-2' }),
-                            'Analysis Summary'
-                        ),
-                        React.createElement('div', { className: 'grid md:grid-cols-2 gap-6' },
-                            React.createElement('div', null,
-                                React.createElement('h4', { className: 'font-medium mb-2' }, 'Market Overview'),
-                                React.createElement('ul', { className: 'text-sm text-gray-600 space-y-1' },
-                                    React.createElement('li', null, `• Target Market: ${marketData.targetMarket || 'Not specified'}`),
-                                    React.createElement('li', null, `• Total Addressable Market: ${formatNumber(parseInt(marketData.totalBusinesses) || 0)} businesses`),
-                                    React.createElement('li', null, `• Average Deal Size: ${formatCurrency(parseFloat(marketData.averagePrice) || 0)}`)
-                                )
-                            ),
-                            React.createElement('div', null,
-                                React.createElement('h4', { className: 'font-medium mb-2' }, 'Investment Analysis'),
-                                React.createElement('ul', { className: 'text-sm text-gray-600 space-y-1' },
-                                    React.createElement('li', null, `• Development Investment: ${formatCurrency(parseFloat(marketData.developmentCost) || 0)}`),
-                                    React.createElement('li', null, `• Risk Assessment: ${results.investmentRatio < 10 ? 'Low Risk' : results.investmentRatio < 25 ? 'Medium Risk' : 'High Risk'}`),
-                                    React.createElement('li', null, `• Market Validation: ${results.interestRate > 20 ? 'Strong' : results.interestRate > 10 ? 'Moderate' : 'Weak'}`)
-                                )
-                            )
-                        )
-                    ),
-                    React.createElement('div', { className: 'bg-blue-50 p-6 rounded-lg' },
-                        React.createElement('h3', { className: 'text-lg font-semibold mb-3 text-blue-900' }, 'Recommendations'),
-                        React.createElement('div', { className: 'space-y-2 text-sm' },
-                            results.investmentRatio < 10 && React.createElement('p', { className: 'text-green-700' }, `✓ `, React.createElement('strong', null, 'Low-risk investment'), ` - Development cost is only ${results.investmentRatio.toFixed(1)}% of potential revenue`),
-                            results.interestRate > 15 && React.createElement('p', { className: 'text-green-700' }, `✓ `, React.createElement('strong', null, 'Strong market interest'), ` - ${results.interestRate.toFixed(1)}% interest rate indicates good market fit`),
-                            results.potentialCustomers > 1000 && React.createElement('p', { className: 'text-green-700' }, `✓ `, React.createElement('strong', null, 'Large addressable market'), ` - ${formatNumber(results.potentialCustomers)} potential customers`),
-                            results.investmentRatio > 25 && React.createElement('p', { className: 'text-yellow-700' }, `⚠ `, React.createElement('strong', null, 'Consider reducing development costs'), ` - Investment ratio of ${results.investmentRatio.toFixed(1)}% is relatively high`),
-                            results.interestRate < 10 && React.createElement('p', { className: 'text-red-700' }, `⚠ `, React.createElement('strong', null, 'Low market interest'), ` - Consider improving product-market fit before investing`)
-                        )
-                    ),
-                    React.createElement('div', { className: 'flex justify-between' },
-                        React.createElement('button', {
-                            onClick: () => setCurrentStep(2),
-                            className: 'bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition-colors'
-                        }, 'Back to Edit'),
-                        React.createElement('button', {
-                            onClick: () => setCurrentStep(1),
-                            className: 'bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors'
-                        }, 'Start New Analysis')
-                    )
-                )
-            );
+                <div className="space-y-6">
+                    <div className="text-center">
+                        <h2 className="text-2xl font-bold text-gray-900 mb-2">Market Sizing Results</h2>
+                        <p className="text-gray-600">Based on your {method} analysis</p>
+                    </div>
 
-            return React.createElement('div', { className: 'max-w-6xl mx-auto p-6 bg-white' },
-                React.createElement('div', { className: 'text-center mb-8' },
-                    React.createElement('div', { className: 'flex items-center justify-center mb-4' },
-                        React.createElement(Calculator, { className: 'h-12 w-12 text-blue-600 mr-3' }),
-                        React.createElement('h1', { className: 'text-3xl font-bold text-gray-900' }, 'Market Sizing Calculator')
-                    ),
-                    React.createElement('p', { className: 'text-gray-600 max-w-2xl mx-auto' },
-                        'Estimate your market potential with data-driven analysis. Calculate total addressable market, potential revenue, and investment ratios to make informed business decisions.'
-                    )
-                ),
-                React.createElement('div', { className: 'mb-8' },
-                    React.createElement('div', { className: 'flex items-center justify-center space-x-4' },
-                        [1, 2, 3].map((step) =>
-                            React.createElement(React.Fragment, { key: step },
-                                React.createElement('div', {
-                                    className: `flex items-center justify-center w-10 h-10 rounded-full ${
-                                        currentStep >= step ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-500'
-                                    }`
-                                }, step),
-                                step < 3 && React.createElement('div', {
-                                    className: `w-16 h-1 ${
-                                        currentStep > step ? 'bg-blue-600' : 'bg-gray-200'
-                                    }`
-                                })
-                            )
-                        )
-                    ),
-                    React.createElement('div', { className: 'flex justify-between mt-2 text-sm text-gray-600 max-w-md mx-auto' },
-                        React.createElement('span', null, 'Method'),
-                        React.createElement('span', null, 'Data Input'),
-                        React.createElement('span', null, 'Results')
-                    )
-                ),
-                React.createElement('div', { className: 'bg-white rounded-lg shadow-sm border border-gray-200 p-8' },
-                    currentStep === 1 && React.createElement(MethodSelection),
-                    currentStep === 2 && React.createElement(DataInput),
-                    currentStep === 3 && React.createElement(ResultsView)
-                )
-            );
-        };
-
-        ReactDOM.render(React.createElement(MarketSizingTool), document.getElementById('root'));
-    </script>
-</body>
-</html>
+                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div className="bg-blue-50 p-6 rounded-lg">
+                            <div className="flex items-center mb-2">
+                                <Users className=
